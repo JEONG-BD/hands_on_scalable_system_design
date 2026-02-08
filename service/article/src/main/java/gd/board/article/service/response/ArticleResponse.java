@@ -19,7 +19,7 @@ public class ArticleResponse {
 
     public static ArticleResponse from(Article article){
         ArticleResponse response = new ArticleResponse();
-        response.id = article.getId();
+        response.id = article.getArticleId();
         response.title = article.getTitle();
         response.content = article.getContent();
         response.boardId = article.getBoardId();

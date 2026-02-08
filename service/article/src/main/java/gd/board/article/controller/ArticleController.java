@@ -9,12 +9,11 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("article")
 public class ArticleController {
 
     private final ArticleService articleService;
 
-    @PostMapping("/v1/articles/")
+    @PostMapping("/v1/articles")
     public ArticleResponse save(@RequestBody ArticleCreateRequest request){
         return articleService.create(request);
     }

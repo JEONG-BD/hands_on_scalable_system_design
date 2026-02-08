@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 public class Article {
 
     @Id
-    private Long id;
+    private Long articleId;
     private String title;
     private String content;
     private Long boardId; //shard key
@@ -29,7 +29,7 @@ public class Article {
 
     public static Article create(Long id, String title, String content, Long boardId, Long writerId) {
         Article article = new Article();
-        article.id = id;
+        article.articleId = id;
         article.title = title;
         article.content = content;
         article.boardId = boardId;
