@@ -1,5 +1,6 @@
 package gd.board.article.api;
 
+import gd.board.article.service.response.ArticlePageResponse;
 import gd.board.article.service.response.ArticleResponse;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,6 +20,21 @@ class ArticleApiTest {
         System.out.println(response);
     }
 
+    @Test
+    public void readAllTest() throws Exception{
+        //given
+        ArticlePageResponse response = client.get()
+                .uri("/v1/articles?boardId=1&pageSize=30&page=1")
+                .retrieve()
+                .body(ArticlePageResponse.class);
+        //when
+        System.out.println("response.getArticleCount = " + response.getArticleCount());
+        for (ArticleResponse article : response.getArticles()) {
+            System.out.println("article =" + article.getId());
+
+        }
+        //then
+    }
     @Test
     public void readTest() throws Exception{
         //given
