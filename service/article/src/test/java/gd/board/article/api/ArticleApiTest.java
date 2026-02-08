@@ -1,4 +1,4 @@
-package gd.board.article.controller;
+package gd.board.article.api;
 
 import gd.board.article.service.response.ArticleResponse;
 import lombok.AllArgsConstructor;
@@ -6,7 +6,7 @@ import lombok.Getter;
 import org.junit.jupiter.api.Test;
 import org.springframework.web.client.RestClient;
 
-class ArticleControllerTest {
+class ArticleApiTest {
     RestClient client = RestClient.create("http://localhost:9000");
 
     @Test
