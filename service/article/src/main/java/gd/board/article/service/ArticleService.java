@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -56,5 +57,13 @@ public class ArticleService {
                         PageCalculator.calculatePageLimit(page, pageSize, 10L)
                         )
         );
+    }
+
+    public List<ArticleResponse> readAllInfiniteScroll(Long boardId, Long pageSize, Long lastArticleId){
+
+        List<Article> articles = lastArticleId == null ? articleRepository.findInfiniteScroll(boardId, pageSize) :
+                articleRepository.findInfiniteScroll(boardId, pageSize, lastArticleId);
+
+        return articles.stream().map(ArticleResponse::from).toList();
     }
 }

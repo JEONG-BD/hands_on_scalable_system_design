@@ -5,11 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @Slf4j
 @SpringBootTest
@@ -28,6 +25,25 @@ class ArticleRepositoryTest {
         }
         //when
 
+        //then
+    }
+    
+    @Test
+    public void findInfiniteScrollTest() throws Exception{
+        //given
+        List<Article> articles = articleRepository.findInfiniteScroll(1L, 30L);
+        //when
+        for (Article article : articles) {
+            log.info("articleId = {}", article.getArticleId());
+        }
+
+        Long lastArticleId = articles.getLast().getArticleId();
+
+        log.info("article lastId {}" , lastArticleId);
+        List<Article> articlesAfter = articleRepository.findInfiniteScroll(1L, 30L, lastArticleId);
+
+        Long articleId = articlesAfter.getFirst().getArticleId();
+        log.info("article firstId {}" , articleId);
         //then
     }
 

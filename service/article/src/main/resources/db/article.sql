@@ -37,3 +37,17 @@ select count(*)
   from (select article_id from article
          where board_id = {board_id}
          limit {limit}) t;
+
+-- 게시글 목록 조회 무한 스크롤
+-- 1번 페이지
+select *
+  from article
+ where board_id = {board_id}
+ order by article_id desc limit 30;
+
+
+-- 2번 페이지 last_article_id
+ select *
+   from article
+  where board_id = board_id and article_id < last_article_id
+ order by article_id desc limit 30;
