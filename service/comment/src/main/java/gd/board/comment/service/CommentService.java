@@ -53,6 +53,7 @@ public class CommentService {
                 .orElseThrow();
     }
 
+    @Transactional
     public void delete(Long commentId){
         commentRepository.findById(commentId)
                 .filter(not(Comment::getDeleted))
@@ -71,12 +72,12 @@ public class CommentService {
         if(!comment.isRoot()){
             commentRepository.findById(comment.getParentCommentId())
                     .filter(Comment::getDeleted)
-                    .filter(this::hasChildren)
+                    .filter(not(this::hasChildren))
                     .ifPresent(this::delete);
         }
     }
 
     private boolean hasChildren(Comment comment) {
-        return commentRepository.countBy(comment.getArticleId(), comment.getCommentId(), 2L) == 2;
+        return commentRepository.countBy(comment.getArticleId(), comment.getCommentId(), 2L) >= 2;
     }
 }
