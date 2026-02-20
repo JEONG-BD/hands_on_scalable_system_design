@@ -4,6 +4,7 @@ import gd.board.comment.service.CommentService;
 import gd.board.comment.service.request.CommentCreateRequest;
 import gd.board.comment.service.response.CommentPageResponse;
 import gd.board.comment.service.response.CommentResponse;
+import jakarta.websocket.server.PathParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,18 +22,18 @@ public class CommentController {
     }
 
     @GetMapping("/v1/comments")
-    public CommentPageResponse readAll(@PathVariable("articleId") Long articleId,
-                                       @PathVariable("page") Long page,
-                                       @PathVariable("pageSize") Long pageSize){
+    public CommentPageResponse readAll(@RequestParam("articleId") Long articleId,
+                                       @RequestParam("page") Long page,
+                                       @RequestParam("pageSize") Long pageSize){
         return commentService.readAll(articleId, page, pageSize);
     }
 
 
     @GetMapping("/v1/comments/infinite-scroll")
-    public List<CommentResponse> readAllInfiniteScroll(@PathVariable("articleId") Long articleId,
-                                                       @PathVariable("lastParentCommentId") Long lastParentCommentId,
-                                                       @PathVariable("lastCommentId") Long lastCommentId,
-                                                       @PathVariable("pageSize") Long pageSize){
+    public List<CommentResponse> readAllInfiniteScroll(@RequestParam("articleId") Long articleId,
+                                                       @RequestParam(value = "lastParentCommentId", required = false) Long lastParentCommentId,
+                                                       @RequestParam(value = "lastCommentId", required = false) Long lastCommentId,
+                                                       @RequestParam("pageSize") Long pageSize){
         return commentService.readAll(articleId, lastParentCommentId, lastCommentId, pageSize);
     }
 

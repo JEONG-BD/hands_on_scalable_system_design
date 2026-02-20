@@ -36,19 +36,19 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
                     "comment.article_id, " +
                     "comment.writer_id, " +
                     "comment.deleted, " +
-                    "comment.created_at, " +
+                    "comment.created_at " +
                     "from (" +
                         "select comment_id " +
                           "from comment " +
                          "where article_id = :articleId " +
                          "order by parent_comment_id asc , comment_id asc " +
-                         "limit :limit offset :offset " +
+                         "limit :limit  offset :offset " +
                     ") t left join comment on t.comment_id = comment.comment_id",
             nativeQuery = true
     )
     List<Comment> findAll(
             @Param("articleId") Long articleId,
-            @Param("offest") Long offest,
+            @Param("offset") Long offset,
             @Param("limit") Long limit
     );
 
@@ -57,14 +57,13 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
                       "from (" +
                             "select comment_id " +
                               "from comment " +
-                             "where article_id = :article_id " +
+                             "where article_id = :articleId " +
                              "limit :limit " +
                     ") t",
             nativeQuery = true
     )
     Long count(@Param("articleId") Long articleId,
                @Param("limit") Long limit);
-
 
     @Query(
             value = "select comment.comment_id, " +
@@ -73,10 +72,10 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
                            "comment.article_id, " +
                            "comment.writer_id, " +
                            "comment.deleted, " +
-                           "comment.created_at, " +
+                           "comment.created_at " +
                       "from comment " +
-                      "where article_id = :articleId" +
-                      "order by parent_comment_id asc, comment_id asc" +
+                      "where article_id = :articleId " +
+                      "order by parent_comment_id asc, comment_id asc " +
                       "limit :limit",
             nativeQuery = true
     )
@@ -92,15 +91,15 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
                            "comment.article_id, " +
                            "comment.writer_id, " +
                            "comment.deleted, " +
-                           "comment.created_at, " +
+                           "comment.created_at " +
                     "from comment " +
                     "where article_id = :articleId " +
                       "and (" +
                             "parent_comment_id > :lastParentCommentId or " +
-                            "(parent_comment_id = :lastParentCommentId and " +
-                            " comment_id > : lastCommentId ) " +
+                            "( parent_comment_id = :lastParentCommentId and " +
+                            " comment_id > :lastCommentId ) " +
                     ")" +
-                    "order by parent_comment_id asc, comment_id asc" +
+                    "order by parent_comment_id asc, comment_id asc " +
                     "limit :limit",
             nativeQuery = true
     )
