@@ -3,12 +3,14 @@ package gd.board.comment.service;
 import gd.board.comment.entity.Comment;
 import gd.board.comment.repository.CommentRepository;
 import gd.board.comment.service.request.CommentCreateRequest;
+import gd.board.comment.service.response.CommentPageResponse;
 import gd.board.comment.service.response.CommentResponse;
 import kuke.board.common.snowflake.Snowflake;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.function.Predicate;
 
 import static java.util.function.Predicate.*;
@@ -80,4 +82,22 @@ public class CommentService {
     private boolean hasChildren(Comment comment) {
         return commentRepository.countBy(comment.getArticleId(), comment.getCommentId(), 2L) == 2;
     }
+
+    public CommentPageResponse readAll(Long articleId, Long page, Long pageSize){
+        return CommentPageResponse.of(commentRepository.findAll(articleId, (page-1), pageSize)
+                .stream().map(CommentResponse::from)
+                .toList(),
+                commentRepository.count(articleId, PageCalculator.calculatePageLimit(page, pageSize, 10L)));
+    }
+
+    public List<CommentResponse> readAll(Long articleId, Long lastParentCommentId, Long lastCommentId, Long limit){
+
+        List<Comment> comments = lastParentCommentId == null || lastCommentId == null ?
+                commentRepository.findAllInfiniteScroll(articleId, limit) :
+                commentRepository.findAllInfiniteScroll(articleId, lastParentCommentId, lastCommentId, limit);
+
+        return comments.stream().map(CommentResponse::from).toList();
+    }
+
+
 }
