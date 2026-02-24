@@ -4,12 +4,14 @@ import gd.board.comment.entity.CommentPath;
 import gd.board.comment.entity.CommentV2;
 import gd.board.comment.repository.CommentRepositoryV2;
 import gd.board.comment.service.request.CommentCreateRequestV2;
+import gd.board.comment.service.response.CommentPageResponse;
 import gd.board.comment.service.response.CommentResponse;
 import kuke.board.common.snowflake.Snowflake;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.function.Predicate;
 
 import static java.util.function.Predicate.*;
@@ -48,7 +50,9 @@ public class CommentServiceV2 {
             return null;
         }
 
-        return commentRepositoryV2.findByPath(parentPath).filter(CommentV2::getDeleted).orElseThrow();
+        return commentRepositoryV2.findByPath(parentPath)
+                .filter(not(CommentV2::getDeleted))
+                .orElseThrow();
 
     }
 
@@ -89,6 +93,26 @@ public class CommentServiceV2 {
                     .ifPresent(this::delete);
         }
     }
+
+    public CommentPageResponse readAll(Long articleId, Long page, Long pageSize) {
+        return CommentPageResponse.of(
+                commentRepositoryV2.findAll(articleId, (page - 1) * pageSize, pageSize).stream()
+                        .map(CommentResponse::from)
+                        .toList(),
+                commentRepositoryV2.count(articleId, PageCalculator.calculatePageLimit(page, pageSize, 10L))
+        );
+    }
+
+    public List<CommentResponse> readAllInfiniteScroll(Long articleId, String lastPath, Long pageSize) {
+        List<CommentV2> comments = lastPath == null ?
+                commentRepositoryV2.findAllInfiniteScroll(articleId, pageSize) :
+                commentRepositoryV2.findAllInfiniteScroll(articleId, lastPath, pageSize);
+
+        return comments.stream()
+                .map(CommentResponse::from)
+                .toList();
+    }
+
 
 }
 
