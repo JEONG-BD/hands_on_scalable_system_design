@@ -18,12 +18,29 @@ public class CommentV2 {
     private Long commentId;
     private String content;
     private Long articleId;
-    private Long parentCommentId;
     private Long writerId;
     @Embedded
     private CommentPath commentPath;
     private Boolean deleted;
     private LocalDateTime createdAt;
 
+    public static CommentV2 create(Long commentId, String content, Long articleId, Long writerId, CommentPath commentPath) {
+        CommentV2 comment = new CommentV2();
+        comment.commentId = commentId;
+        comment.content = content;
+        comment.articleId= articleId;
+        comment.writerId = writerId;
+        comment.commentPath = commentPath;
+        comment.createdAt = LocalDateTime.now();
+        comment.deleted = false;
+        return comment;
+    }
+    public boolean isRoot(){
+        return commentPath.isRoot();
+    }
+
+    public void delete(){
+        deleted  = true;
+    }
 
 }
