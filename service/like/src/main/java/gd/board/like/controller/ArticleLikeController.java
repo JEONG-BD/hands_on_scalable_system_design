@@ -11,19 +11,19 @@ public class ArticleLikeController {
 
     private final ArticleLikeService articleLikeService;
 
-    @GetMapping("/v1/articles-likes/articles/{articleId}/users/{userId}")
+    @GetMapping("/v1/article-likes/articles/{articleId}/users/{userId}")
     public ArticleLikeResponse read(@PathVariable("articleId") Long articleId,
                                     @PathVariable("userId") Long userId){
         return articleLikeService.read(articleId, userId);
     }
 
-    @PostMapping("/v1/articles-likes/articles/{articleId}/users/{userId}")
+    @PostMapping("/v1/article-likes/articles/{articleId}/users/{userId}")
     public void like(@PathVariable("articleId") Long articleId,
                      @PathVariable("userId") Long userId){
         articleLikeService.like(articleId, userId);
     }
 
-    @DeleteMapping("/v1/articles-likes/articles/{articleId}/users/{userId}")
+    @DeleteMapping("/v1/article-likes/articles/{articleId}/users/{userId}")
     public void unlike(@PathVariable("articleId") Long articleId,
                        @PathVariable("userId") Long userId){
         articleLikeService.unlike(articleId, userId);

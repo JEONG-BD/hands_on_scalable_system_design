@@ -29,19 +29,19 @@ public class LikeApiTest {
 
     void like(Long articleId, Long userId){
         restClient.post()
-                .uri("/v1/articles-likes/articles/{articleId}/users/{userId}", articleId, userId)
+                .uri("/v1/article-likes/articles/{articleId}/users/{userId}", articleId, userId)
                 .retrieve();
     }
 
     void unlike(Long articleId, Long userId){
         restClient.delete()
-                .uri("/v1/articles-likes/articles/{articleId}/users/{userId}", articleId, userId)
+                .uri("/v1/article-likes/articles/{articleId}/users/{userId}", articleId, userId)
                 .retrieve();
     }
 
     ArticleLikeResponse read(Long articleId, Long userId){
         return restClient.get()
-                .uri("/v1/articles-likes/articles/{articleId}/users/{userId}", articleId, userId)
+                .uri("/v1/article-likes/articles/{articleId}/users/{userId}", articleId, userId)
                 .retrieve().body(ArticleLikeResponse.class);
 
     }
