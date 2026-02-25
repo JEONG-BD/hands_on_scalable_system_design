@@ -105,8 +105,12 @@ public class ArticleLikeService {
                     ArticleLikeCount articleLikeCount = articleLikeCountRepository.findById(articleId).orElseThrow();
                     articleLikeCount.decrease();
                 });
+    }
 
-
+    public Long count(Long articleId){
+        return articleLikeCountRepository.findById(articleId)
+                .map(ArticleLikeCount::getLikeCount)
+                .orElse(0L);
 
     }
 }
