@@ -17,15 +17,42 @@ public class ArticleLikeController {
         return articleLikeService.read(articleId, userId);
     }
 
-    @PostMapping("/v1/article-likes/articles/{articleId}/users/{userId}")
-    public void like(@PathVariable("articleId") Long articleId,
+    @PostMapping("/v1/article-likes/articles/{articleId}/users/{userId}/pessimistic-lock-1")
+    public void likePessimisticV1(@PathVariable("articleId") Long articleId,
                      @PathVariable("userId") Long userId){
-        articleLikeService.like(articleId, userId);
+        articleLikeService.likePessimisticLockV1(articleId, userId);
     }
 
-    @DeleteMapping("/v1/article-likes/articles/{articleId}/users/{userId}")
-    public void unlike(@PathVariable("articleId") Long articleId,
+    @DeleteMapping("/v1/article-likes/articles/{articleId}/users/{userId}/pessimistic-lock-1")
+    public void unlikePessimisticV1(@PathVariable("articleId") Long articleId,
                        @PathVariable("userId") Long userId){
-        articleLikeService.unlike(articleId, userId);
+        articleLikeService.unlikePessimisticLockV1(articleId, userId);
     }
+
+    @PostMapping("/v1/article-likes/articles/{articleId}/users/{userId}/pessimistic-lock-2")
+    public void likePessimisticV2(@PathVariable("articleId") Long articleId,
+                     @PathVariable("userId") Long userId){
+        articleLikeService.likePessimisticLockV2(articleId, userId);
+    }
+
+    @DeleteMapping("/v1/article-likes/articles/{articleId}/users/{userId}/pessimistic-lock-2")
+    public void unlikePessimisticV2(@PathVariable("articleId") Long articleId,
+                       @PathVariable("userId") Long userId){
+        articleLikeService.unlikePessimisticLockV2(articleId, userId);
+    }
+
+    @PostMapping("/v1/article-likes/articles/{articleId}/users/{userId}/optimistic-lock")
+    public void likeOptimisticV1(@PathVariable("articleId") Long articleId,
+                     @PathVariable("userId") Long userId){
+        articleLikeService.likeOptimisticLock(articleId, userId);
+    }
+
+    @DeleteMapping("/v1/article-likes/articles/{articleId}/users/{userId}/pessimistic-lock")
+    public void unlikeOptimisticV1(@PathVariable("articleId") Long articleId,
+                       @PathVariable("userId") Long userId){
+        articleLikeService.unlikeOptimisticLock(articleId, userId);
+    }
+
+
+
 }
