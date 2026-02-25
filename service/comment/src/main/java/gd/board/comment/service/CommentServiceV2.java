@@ -1,7 +1,9 @@
 package gd.board.comment.service;
 
+import gd.board.comment.entity.ArticleCommentCount;
 import gd.board.comment.entity.CommentPath;
 import gd.board.comment.entity.CommentV2;
+import gd.board.comment.repository.ArticleCommentCountRepository;
 import gd.board.comment.repository.CommentRepositoryV2;
 import gd.board.comment.service.request.CommentCreateRequestV2;
 import gd.board.comment.service.response.CommentPageResponse;
@@ -22,7 +24,7 @@ public class CommentServiceV2 {
 
     private final Snowflake snowflake = new Snowflake();
     private final CommentRepositoryV2 commentRepositoryV2;
-
+    private final ArticleCommentCountRepository articleCommentCountRepository;
     @Transactional
     public CommentResponse create(CommentCreateRequestV2 request){
         CommentV2 parent = findParent(request);
@@ -40,6 +42,13 @@ public class CommentServiceV2 {
                                         .orElse(null))
                 )
         );
+
+        int result = articleCommentCountRepository.increase(request.getArticleId());
+
+        if(result == 0){
+            articleCommentCountRepository.save(ArticleCommentCount.init(request.getArticleId(), 1L));
+        }
+
         return CommentResponse.from(comment);
 
     }
@@ -76,7 +85,6 @@ public class CommentServiceV2 {
                 );
     }
 
-
     private boolean hasChildren(CommentV2 comment) {
         return commentRepositoryV2.findDescendantsTopPath(
                 comment.getArticleId(),
@@ -86,6 +94,7 @@ public class CommentServiceV2 {
 
     private void delete(CommentV2 comment) {
         commentRepositoryV2.delete(comment);
+        articleCommentCountRepository.decrease(comment.getArticleId());
         if (!comment.isRoot()) {
             commentRepositoryV2.findByPath(comment.getCommentPath().getParentPath())
                     .filter(CommentV2::getDeleted)
@@ -111,6 +120,12 @@ public class CommentServiceV2 {
         return comments.stream()
                 .map(CommentResponse::from)
                 .toList();
+    }
+
+    public Long count(Long articleId){
+        return articleCommentCountRepository.findById(articleId)
+                .map(ArticleCommentCount::getCommentCount).orElse(0L);
+
     }
 
 
