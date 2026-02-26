@@ -11,16 +11,16 @@ public class ArticleViewCountRepository {
 
     private static final String KEY_FORMAT = "view::article::%s::view_count";
 
-    public Long read(Long articleId){
+    public Long read(Long articleId) {
         String result = redisTemplate.opsForValue().get(generateKey(articleId));
-        return result == null? 0L : Long.valueOf(result);
+        return result == null ? 0L : Long.valueOf(result);
+    }
+
+    public Long increase(Long articleId) {
+        return redisTemplate.opsForValue().increment(generateKey(articleId));
     }
 
     private String generateKey(Long articleId) {
         return KEY_FORMAT.formatted(articleId);
-    }
-
-    public Long increase(Long articleId){
-        return redisTemplate.opsForValue().increment(generateKey(articleId));
     }
 }

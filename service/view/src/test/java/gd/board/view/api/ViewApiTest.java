@@ -1,0 +1,37 @@
+package gd.board.view.api;
+
+
+import org.junit.jupiter.api.Test;
+import org.springframework.web.client.RestClient;
+
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+public class ViewApiTest {
+    RestClient client = RestClient.create("http://localhost:9006");
+
+    @Test
+    void viewTest() throws InterruptedException {
+        ExecutorService executorService = Executors.newFixedThreadPool(100);
+        CountDownLatch latch = new CountDownLatch(10000);
+
+        for(int i=0; i<10000; i++) {
+            executorService.submit(() -> {
+                client.post()
+                        .uri("/v1/article-views/articles/{articleId}/users/{userId}", 4L, 1L)
+                        .retrieve();
+                latch.countDown();
+            });
+        }
+
+        latch.await();
+
+        Long count = client.get()
+                .uri("/v1/article-views/articles/{articleId}/count", 4L)
+                .retrieve()
+                .body(Long.class);
+
+        System.out.println("count = " + count);
+    }
+}
