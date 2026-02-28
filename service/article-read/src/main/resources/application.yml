@@ -1,2 +1,25 @@
 server:
-  port: 9001
+  port: 9002
+spring:
+  application:
+    name: gd-board-article-read-service
+  data:
+    redis:
+      host: 127.0.0.1
+      port: 6379
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: gd-board-article-read-service
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      enable-auto-commit: false
+endpoints:
+  gd-board-article-service:
+    url: http://127.0.0.1:9000
+  gd-board-comment-service:
+    url: http://127.0.0.1:9001
+  gd-board-like-service:
+    url: http://127.0.0.1:9005
+  gd-board-view-service:
+    url: http://127.0.0.1:9006
