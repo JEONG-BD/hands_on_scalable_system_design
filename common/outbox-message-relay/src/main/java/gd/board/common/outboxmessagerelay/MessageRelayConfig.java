@@ -14,10 +14,9 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadPoolExecutor;
+
 
 @EnableAsync
 @Configuration
@@ -49,8 +48,8 @@ public class MessageRelayConfig {
     }
 
     @Bean
-    public Executor massageRelayPublishPendingEventExecutor(){
-        return Executors.newSingleThreadExecutor();
-    }
+    public Executor messageRelayPublishPendingEventExecutor() {
+        return Executors.newSingleThreadScheduledExecutor();
+    };
 
 }
