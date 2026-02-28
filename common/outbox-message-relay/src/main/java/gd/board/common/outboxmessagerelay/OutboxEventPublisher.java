@@ -20,7 +20,7 @@ public class OutboxEventPublisher {
                 outboxSnowflake.nextId(),
                 type,
                 Event.of(eventSnowflake.nextId(), type, payload).toJson(),
-                shardKey % MessageRelayCostants.SHARD_COUNT
+                shardKey % MessageRelayConstants.SHARD_COUNT
         );
         applicationEventPublisher.publishEvent(OutboxEvent.of(outbox));
     }
