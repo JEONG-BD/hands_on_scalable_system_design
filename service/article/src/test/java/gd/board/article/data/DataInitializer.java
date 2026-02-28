@@ -3,14 +3,13 @@ package gd.board.article.data;
 import gd.board.article.entity.Article;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import kuke.board.common.snowflake.Snowflake;
+import gd.board.common.snowflake.Snowflake;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 

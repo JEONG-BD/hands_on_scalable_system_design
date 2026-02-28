@@ -1,6 +1,7 @@
 package gd.board.comment.service.request;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 public class CommentCreateRequestV2 {

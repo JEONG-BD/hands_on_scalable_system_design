@@ -1,5 +1,8 @@
 package gd.board.view.service;
 
+import gd.board.common.event.EventType;
+import gd.board.common.event.payload.ArticleViewedEventPayload;
+import gd.board.common.outboxmessagerelay.OutboxEventPublisher;
 import gd.board.view.entity.ArticleViewCount;
 import gd.board.view.repository.ArticleViewCountBackUpRepository;
 import lombok.RequiredArgsConstructor;
@@ -11,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class ArticleViewCountBackUpProcessor {
 
     private final ArticleViewCountBackUpRepository articleViewCountBackUpRepository;
-
+    private final OutboxEventPublisher outboxEventPublisher;
     @Transactional
     public void backUp(Long articleId, Long viewCount){
         int result = articleViewCountBackUpRepository.updateViewCount(articleId, viewCount);
@@ -21,5 +24,14 @@ public class ArticleViewCountBackUpProcessor {
                             () -> articleViewCountBackUpRepository
                                     .save(ArticleViewCount.init(articleId, viewCount)));
         }
+
+        outboxEventPublisher.publish(
+                EventType.ARTICLE_VIEWED,
+                ArticleViewedEventPayload.builder()
+                        .articleId(articleId)
+                        .articleViewCount(viewCount)
+                        .build(),
+                articleId
+        );
     }
 }
